@@ -12,13 +12,12 @@
   <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
   <script>
       $(function () {
-          // $("#message").html("");
           $("input[name=loginAct]").focus();
 
           $(window).keydown(function (event) {
-             if (13 === event.keyCode) {
-                 login();
-             }
+              if (13 === event.keyCode) {
+                  login();
+              }
           });
 
           $("#loginBtn").on("click", login);
@@ -28,10 +27,24 @@
           let loginAct = $("input[name=loginAct]").val();
           let loginPwd = $("input[name=loginPwd]").val();
           if ("" === loginAct || "" === loginPwd) {
-              $("#message").html("登录信息错误");
-              return;
+              $("#message").text("用户名或密码不能为空");
+              return false;
           } else {
-              $.ajax({
+              $.post(
+                  "settings/user/login.do",
+                  {
+                      "loginAct": loginAct,
+                      "loginPwd": loginPwd
+                  },
+                  function (resp) {
+                      if (10000 === resp.success) {
+                          window.location.href = "workbench/index";
+                      } else {
+                          $("#message").text(resp.message);
+                      }
+                  }
+              );
+              /*$.ajax({
                   url: "settings/user/login.do",
                   data: {
                       "loginAct": loginAct,
@@ -40,14 +53,14 @@
                   type: "post",
                   dataType: "json",
                   success: function(resp) {
+                      alert(resp.success);
                       if (10000 === resp.success) {
-                          $("#message").html(resp.message);
+                          // window.location.href = "workbench/index.jsp";
                       } else {
-                          $("#message").html(resp.message);
+                          $("#message").text(resp.message);
                       }
                   }
-              });
-              return;
+              });*/
           }
       }
   </script>
@@ -67,7 +80,7 @@
     <div class="page-header">
       <h1>登录</h1>
     </div>
-    <form class="form-horizontal" role="form">
+    <form  class="form-horizontal" role="form">
       <div class="form-group form-group-lg">
         <div style="width: 350px;">
           <input class="form-control" name="loginAct" type="text" placeholder="用户名">

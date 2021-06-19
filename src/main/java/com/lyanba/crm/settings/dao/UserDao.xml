@@ -21,4 +21,23 @@
     where loginAct = #{loginAct}
       and loginPwd = #{loginPwd}
   </select>
+
+  <select id="login" resultType="com.lyanba.crm.settings.domain.User">
+    select id,
+           loginAct,
+           name,
+           loginPwd,
+           email,
+           expireTime,
+           lockState,
+           deptno,
+           allowIps,
+           createTime,
+           createBy,
+           editTime,
+           editBy
+    from tbl_user
+    where loginAct = #{loginAct}
+      and loginPwd = #{loginPwd}
+  </select>
 </mapper>

@@ -1,7 +1,9 @@
 package com.lyanba.crm.settings.web.controller;
 
+import com.lyanba.crm.exception.LoginException;
 import com.lyanba.crm.settings.domain.User;
 import com.lyanba.crm.settings.service.UserService;
+import com.lyanba.crm.utils.HandleFlag;
 import com.lyanba.crm.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,20 +33,19 @@ public class UserController {
     }
 
     @PostMapping("/login.do")
-    public @ResponseBody
-    Map<String, Object> login(HttpSession session, String loginAct, String loginPwd) {
+    @ResponseBody
+    public Map<String, Object> login(HttpServletRequest request, String loginAct, String loginPwd) {
+        System.out.println(">---------- 进入到用户验证操作 ----------<");
+        String ip = request.getRemoteAddr();
+        System.out.println(">---------- 当前用户的 IP 地址 ----------<\n>---------- " + ip + " ----------<");
         loginPwd = MD5Util.getMD5(loginPwd);
-        User user = userService.getUserByLoginActAndLoginPwd(loginAct, loginPwd);
-        Map<String, Object> result = new HashMap<>();
-        if (null != user) {
-            result.put("success", 10000);
-            result.put("message", "登录成功");
-            // session.setAttribute("user", user);
-            return result;
-        } else {
-            result.put("success", 10001);
-            result.put("message", "登录失败");
-            return result;
+        try {
+            User user = userService.login(loginAct, loginPwd, ip);
+            request.getSession().setAttribute("user", user);
+            return HandleFlag.success();
+        } catch (LoginException e) {
+            e.printStackTrace();
+            return HandleFlag.failObj("message", e.getMessage());
         }
     }
 

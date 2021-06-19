@@ -11,16 +11,29 @@ public class HandleFlag {
         return map;
     }*/
 
-    public static Map<String,Object> successTrue(){
-        Map<String,Object> map = new HashMap<>();
-        map.put("success",true);
+    public static Map<String, Object> success() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", 10000);
         return map;
     }
 
-    public static Map<String,Object> successObj(String key,Object obj){
-        Map<String,Object> map = new HashMap<>();
-        map.put("success",true);
-        map.put(key,obj);
+    public static Map<String, Object> fail() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", 10001);
+        return map;
+    }
+
+    public static Map<String, Object> successObj(String key, Object obj) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", 10000);
+        map.put(key, obj);
+        return map;
+    }
+
+    public static Map<String, Object> failObj(String key, Object obj) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", 10001);
+        map.put(key, obj);
         return map;
     }
 }
