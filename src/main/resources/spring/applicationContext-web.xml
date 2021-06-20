@@ -25,8 +25,7 @@
       <mvc:exclude-mapping path="/index.html"/>
       <mvc:exclude-mapping path="/settings/user/login.do"/>
       <mvc:exclude-mapping path="/settings/user/toLogin.do"/>
-      <!--<mvc:exclude-mapping path="/settings/user/logout"/>-->
-    <bean class="com.lyanba.crm.interceptor.LoginInterceptor"/>
+      <bean class="com.lyanba.crm.interceptor.LoginInterceptor"/>
     </mvc:interceptor>
   </mvc:interceptors>
 

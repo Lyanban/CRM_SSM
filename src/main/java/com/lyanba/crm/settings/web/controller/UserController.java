@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping("/login.do")
-    public @ResponseBody
-    Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, String flag, String loginAct, String loginPwd) {
+    @ResponseBody
+    public Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, String flag, String loginAct, String loginPwd) {
         System.out.println(">---------- 进入到用户验证操作 ----------<");
         String ip = request.getRemoteAddr();
         System.out.println(">---------- 当前用户的 IP 地址 ----------<\n>---------- " + ip + " ----------<");
@@ -102,17 +102,17 @@ public class UserController {
     }
 
     @RequestMapping("/logout")
-    public String logout(HttpServletRequest request,HttpServletResponse response){
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
         //销毁session中的数据
         request.getSession().removeAttribute("user");
         //清空cookie中的用户名
         //cookie对象并没有删除的操作
         //我们需要将用户名和密码,设置为空字符串即可
         //通过response对象写入回浏览器中,并设置过期时间为0,代表立即过期
-//        for (Cookie cookie : request.getCookies()) {
-//        }
-        Cookie loginActCookie = new Cookie("loginAct","");
-        Cookie loginPwdCookie = new Cookie("loginPwd","");
+        //        for (Cookie cookie : request.getCookies()) {
+        //        }
+        Cookie loginActCookie = new Cookie("loginAct", "");
+        Cookie loginPwdCookie = new Cookie("loginPwd", "");
 
         loginActCookie.setPath("/");
         loginPwdCookie.setPath("/");

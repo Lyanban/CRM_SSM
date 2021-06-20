@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
+  String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
 %>
 <html>
 <head>
@@ -36,7 +36,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
               $(this).children("a").css("color", "white");
           });
 
-
           window.open("settings/dictionary/type/index", "workareaFrame");
 
       });
@@ -58,12 +57,12 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
       </div>
       <div class="modal-body">
         <div style="position: relative; left: 40px;">
-          姓名：<b>张三</b><br><br>
-          登录帐号：<b>zhangsan</b><br><br>
-          组织机构：<b>1005，市场部，二级部门</b><br><br>
-          邮箱：<b>zhangsan@bjpowernode.com</b><br><br>
-          失效时间：<b>2017-02-14 10:10:10</b><br><br>
-          允许访问IP：<b>127.0.0.1,192.168.100.2</b>
+          姓名：<b> ${sessionScope.user.name} </b><br><br>
+          登录帐号：<b> ${sessionScope.user.loginAct} </b><br><br>
+          组织机构：<b> ${sessionScope.user.deptno} </b><br><br>
+          邮箱：<b> ${sessionScope.user.email} </b><br><br>
+          失效时间：<b> ${sessionScope.user.expireTime} </b><br><br>
+          允许访问IP：<b> ${sessionScope.user.allowIps} </b>
         </div>
       </div>
       <div class="modal-footer">
@@ -132,9 +131,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='settings/user/logout';">
-          确定
-        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                onclick="window.location.href='settings/user/logout';">确定</button>
       </div>
     </div>
   </div>
@@ -174,10 +172,16 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
   <div id="navigation" style="left: 0px; width: 18%; position: relative; height: 100%; overflow:auto;">
 
     <ul id="no1" class="nav nav-pills nav-stacked">
-      <li class="liClass"><a href="settings/dictionary/type/index" target="workareaFrame"><span
-              class="glyphicon glyphicon-book"></span> 字典类型</a></li>
-      <li class="liClass"><a href="settings/dictionary/value/index" target="workareaFrame"><span
-              class="glyphicon glyphicon-list"></span> 字典值</a></li>
+      <li class="liClass">
+        <a href="settings/dictionary/type/index" target="workareaFrame">
+          <span class="glyphicon glyphicon-book"></span> 字典类型
+        </a>
+      </li>
+      <li class="liClass">
+        <a href="settings/dictionary/value/index" target="workareaFrame">
+          <span class="glyphicon glyphicon-list"></span> 字典值
+        </a>
+      </li>
     </ul>
 
     <!-- 分割线 -->

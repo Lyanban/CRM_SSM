@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
+  String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
 %>
 <html>
 <head>
@@ -99,7 +99,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='settings/user/logout';">
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                onclick="window.location.href='settings/user/logout';">
           确定
         </button>
       </div>
