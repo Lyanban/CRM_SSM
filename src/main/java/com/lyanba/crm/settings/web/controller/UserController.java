@@ -86,7 +86,6 @@ public class UserController {
                     //获取到了密码(加密后)
                     loginPwd = cookie.getValue();
                 }
-
             }
             String ip = request.getRemoteAddr();
             if (loginAct != null && loginPwd != null && loginAct.length() > 0 && loginPwd.length() > 0) {
@@ -99,6 +98,33 @@ public class UserController {
                 }
             }
         }
-        return "redirect:/index.jsp";
+        return "redirect:/login.jsp";
+    }
+
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request,HttpServletResponse response){
+        //销毁session中的数据
+        request.getSession().removeAttribute("user");
+        //清空cookie中的用户名
+        //cookie对象并没有删除的操作
+        //我们需要将用户名和密码,设置为空字符串即可
+        //通过response对象写入回浏览器中,并设置过期时间为0,代表立即过期
+//        for (Cookie cookie : request.getCookies()) {
+//        }
+        Cookie loginActCookie = new Cookie("loginAct","");
+        Cookie loginPwdCookie = new Cookie("loginPwd","");
+
+        loginActCookie.setPath("/");
+        loginPwdCookie.setPath("/");
+
+        loginActCookie.setMaxAge(0);
+        loginPwdCookie.setMaxAge(0);
+
+        //浏览器会将原有的用户名和密码的session数据进行覆盖
+        response.addCookie(loginActCookie);
+        response.addCookie(loginPwdCookie);
+
+        //重定向到登录页面
+        return "redirect:/settings/user/toLogin.do";
     }
 }

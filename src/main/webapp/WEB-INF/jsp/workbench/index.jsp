@@ -36,7 +36,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
               $(this).children("a").css("color", "white");
           });
 
-
           window.open("workbench/main/index", "workareaFrame");
 
       });
@@ -133,7 +132,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
         <button type="button" class="btn btn-primary" data-dismiss="modal"
-                onclick="window.location.href='index.jsp';">确定
+                onclick="window.location.href='settings/user/logout';">确定
         </button>
       </div>
     </div>
