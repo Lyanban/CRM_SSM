@@ -1,5 +1,6 @@
 package com.lyanba.crm.settings.service;
 
+import com.lyanba.crm.exception.LoginException;
 import com.lyanba.crm.settings.domain.User;
 
 /**
@@ -10,5 +11,5 @@ import com.lyanba.crm.settings.domain.User;
  * @todo:
  */
 public interface UserService {
-    User getUserByLoginActAndLoginPwd(String loginAct, String loginPwd);
+    User getUserByLoginActAndLoginPwd(String loginAct, String loginPwd, String ip) throws LoginException;
 }

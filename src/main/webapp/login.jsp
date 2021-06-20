@@ -12,7 +12,6 @@
   <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
   <script>
       $(function () {
-          // $("#message").html("");
           $("input[name=loginAct]").focus();
 
           $(window).keydown(function (event) {
@@ -21,33 +20,42 @@
              }
           });
 
+          $("#check").on("click", function () {
+              if (this.checked) {
+                  $("#flag").val("a");
+              } else {
+                  $("#flag").val("");
+              }
+          });
+
           $("#loginBtn").on("click", login);
       });
 
       function login() {
           let loginAct = $("input[name=loginAct]").val();
           let loginPwd = $("input[name=loginPwd]").val();
+          let flag = $("#flag").val();
           if ("" === loginAct || "" === loginPwd) {
-              $("#message").html("登录信息错误");
-              return;
+              $("#message").html("用户名或密码不能为空");
+              return false;
           } else {
               $.ajax({
                   url: "settings/user/login.do",
                   data: {
                       "loginAct": loginAct,
-                      "loginPwd": loginPwd
+                      "loginPwd": loginPwd,
+                      "flag": flag
                   },
                   type: "post",
                   dataType: "json",
                   success: function(resp) {
                       if (10000 === resp.success) {
-                          $("#message").html(resp.message);
+                          window.location.href = "workbench/index";
                       } else {
                           $("#message").html(resp.message);
                       }
                   }
               });
-              return;
           }
       }
   </script>
@@ -77,7 +85,8 @@
         </div>
         <div class="checkbox" style="position: relative;top: 30px; left: 10px;">
           <label>
-            <input type="checkbox"> 十天内免登录
+            <input id="check" type="checkbox"> 十天内免登录
+            <input type="hidden" id="flag">
           </label>
           &nbsp;&nbsp;
           <span id="message" style="color: red"></span>

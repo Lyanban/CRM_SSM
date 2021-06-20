@@ -1,5 +1,6 @@
 package com.lyanba.crm.settings.web.controller;
 
+import com.lyanba.crm.exception.LoginException;
 import com.lyanba.crm.settings.domain.User;
 import com.lyanba.crm.settings.service.UserService;
 import com.lyanba.crm.utils.MD5Util;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,24 +35,70 @@ public class UserController {
 
     @PostMapping("/login.do")
     public @ResponseBody
-    Map<String, Object> login(HttpSession session, String loginAct, String loginPwd) {
+    Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, String flag, String loginAct, String loginPwd) {
+        System.out.println(">---------- 进入到用户验证操作 ----------<");
+        String ip = request.getRemoteAddr();
+        System.out.println(">---------- 当前用户的 IP 地址 ----------<\n>---------- " + ip + " ----------<");
         loginPwd = MD5Util.getMD5(loginPwd);
-        User user = userService.getUserByLoginActAndLoginPwd(loginAct, loginPwd);
         Map<String, Object> result = new HashMap<>();
-        if (null != user) {
+        try {
+            User user = userService.getUserByLoginActAndLoginPwd(loginAct, loginPwd, ip);
+            request.getSession().setAttribute("user", user);
+            if ("a".equals(flag)) {
+                Cookie loginActCookie = new Cookie("loginAct", loginAct);
+                Cookie loginPwdCookie = new Cookie("loginPwd", loginPwd);
+
+                loginActCookie.setPath("/");
+                loginPwdCookie.setPath("/");
+
+                loginActCookie.setMaxAge(60 * 60 * 24 * 10);
+                loginPwdCookie.setMaxAge(60 * 60 * 24 * 10);
+
+                response.addCookie(loginActCookie);
+                response.addCookie(loginPwdCookie);
+            }
             result.put("success", 10000);
-            result.put("message", "登录成功");
-            // session.setAttribute("user", user);
             return result;
-        } else {
+        } catch (LoginException e) {
+            e.printStackTrace();
             result.put("success", 10001);
-            result.put("message", "登录失败");
+            result.put("message", e.getMessage());
             return result;
         }
     }
 
     @RequestMapping("/toLogin.do")
-    public String toLogin() {
-        return "redirect:/login.jsp";
+    public String toLogin(HttpServletRequest request) throws LoginException {
+        //十天免登陆操作,自动登录
+        Cookie[] cookies = request.getCookies();
+        String loginAct = null;
+        String loginPwd = null;
+        if (cookies != null && cookies.length > 0) {
+            //获取登录的用户名和密码
+            for (Cookie cookie : cookies) {
+                String name = cookie.getName();
+                if ("loginAct".equals(name)) {
+                    //获取到了用户名
+                    loginAct = cookie.getValue();
+                    continue;
+                }
+                if ("loginPwd".equals(name)) {
+                    //获取到了密码(加密后)
+                    loginPwd = cookie.getValue();
+                }
+
+            }
+            String ip = request.getRemoteAddr();
+            if (loginAct != null && loginPwd != null && loginAct.length() > 0 && loginPwd.length() > 0) {
+                //调用service的登录方法,进行自动登录操作
+                User user = userService.getUserByLoginActAndLoginPwd(loginAct, loginPwd, ip);
+                if (user != null) {
+                    //重新存入到session
+                    request.getSession().setAttribute("user", user);
+                    return "redirect:/workbench/index";
+                }
+            }
+        }
+        return "redirect:/index.jsp";
     }
 }
