@@ -20,6 +20,44 @@
           $("input[name=check]").on("change", function () {
               $("#checkAll").prop("checked", $("input[name=check]").length === $("input[name=check]:checked").length);
           });
+
+          $("#editBtn").on("click", function () {
+              let n = $("input[name=check]:checked").length;
+              if (n === 1) {
+                  let code = $("input[name=check]:checked").val();
+                  window.location.href = "settings/dictionary/type/toEdit/" + code;
+              } else if (n === 0) {
+                  alert("请选择要修改的字典类型！");
+              } else {
+                  alert("仅能选择一条字典类型！");
+              }
+          });
+
+          $("#deleteBtn").on("click", function () {
+              let $checks = $("input[name=check]:checked");
+              if ($checks.length !== 0) {
+                  if (confirm("确定删除选中的字典类型吗？")) {
+                      let param = "";
+                      $.each($checks, function (index, item) {
+                          param += "code=" + item.value + "&"
+                      });
+                      param = param.substr(0, param.length - 1);
+                      $.post(
+                          "settings/dictionary/type/delete",
+                          param,
+                          function (resp) {
+                              if (10000 === resp.success) {
+                                  window.location.reload();
+                              } else {
+                                  alert("删除字典类型失败！");
+                              }
+                          }
+                      );
+                  }
+              } else {
+                  alert("请选择要删除的字典类型！");
+              }
+          });
       });
   </script>
 </head>
@@ -37,10 +75,11 @@
     <button type="button" class="btn btn-primary" onclick="window.location.href='settings/dictionary/type/toSave'">
       <span class="glyphicon glyphicon-plus"></span> 创建
     </button>
-    <button type="button" class="btn btn-default" onclick="window.location.href='settings/dictionary/type/toEdit'">
+    <button id="editBtn" type="button" class="btn btn-default">
+      <%--<button id="editBtn" type="button" class="btn btn-default" onclick="window.location.href='settings/dictionary/type/toEdit'">--%>
       <span class="glyphicon glyphicon-edit"></span> 编辑
     </button>
-    <button type="button" class="btn btn-danger">
+    <button id="deleteBtn" type="button" class="btn btn-danger">
       <span class="glyphicon glyphicon-minus"></span> 删除
     </button>
   </div>
@@ -59,7 +98,7 @@
     <tbody>
     <c:forEach items="${dicTypeList}" var="dicType" varStatus="status">
     <tr class="${status.count % 2 == 0 ? "" : "active"}">
-      <td><input type="checkbox" name="check"/></td>
+      <td><input type="checkbox" name="check" value="${dicType.code}"/></td>
       <td>${status.count}</td>
       <td>${dicType.code}</td>
       <td>${dicType.name}</td>

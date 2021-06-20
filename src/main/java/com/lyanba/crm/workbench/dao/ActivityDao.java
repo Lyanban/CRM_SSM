@@ -1,5 +1,10 @@
 package com.lyanba.crm.workbench.dao;
 
+import com.lyanba.crm.workbench.domain.Activity;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
 /**
  * @className: ActivityDao
  * @description:
@@ -8,4 +13,7 @@ package com.lyanba.crm.workbench.dao;
  * @todo:
  */
 public interface ActivityDao {
+    List<Activity> getActivityList();
+
+    Activity getActivityById(@Param("id") String id);
 }

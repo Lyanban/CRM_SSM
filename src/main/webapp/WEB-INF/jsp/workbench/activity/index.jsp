@@ -22,8 +22,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
   <script type="text/javascript">
 
       $(function () {
-
-
       });
 
   </script>
@@ -201,7 +199,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
   </div>
 </div>
 
-
 <div>
   <div style="position: relative; left: 10px; top: -10px;">
     <div class="page-header">
@@ -270,6 +267,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         </button>
       </div>
     </div>
+
     <div style="position: relative;top: 10px;">
       <table class="table table-hover">
         <thead>
@@ -282,9 +280,22 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         </tr>
         </thead>
         <tbody>
-        <tr class="active">
+        <c:forEach items="${activityList}" var="activity" varStatus="status">
+          <tr class="${status.count % 2 == 0 ? "" : "active"}">
+            <td>
+              <input type="checkbox"/>
+            </td>
+            <td>
+              <a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail/${activity.id}';">${activity.name}</a>
+            </td>
+            <td>${activity.owner}</td>
+            <td>${activity.startDate}</td>
+            <td>${activity.endDate}</td>
+          </tr>
+        </c:forEach>
+        <%--<tr class="active">
           <td><input type="checkbox"/></td>
-          <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a>
+          <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail';">发传单</a>
           </td>
           <td>zhangsan</td>
           <td>2020-10-10</td>
@@ -292,12 +303,12 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         </tr>
         <tr class="active">
           <td><input type="checkbox"/></td>
-          <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a>
+          <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail';">发传单</a>
           </td>
           <td>zhangsan</td>
           <td>2020-10-10</td>
           <td>2020-10-20</td>
-        </tr>
+        </tr>--%>
         </tbody>
       </table>
     </div>

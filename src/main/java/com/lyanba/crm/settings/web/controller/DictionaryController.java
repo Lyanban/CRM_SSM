@@ -9,10 +9,12 @@ import com.lyanba.crm.utils.HandleFlag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.transaction.TransactionRequiredException;
 import java.util.List;
 import java.util.Map;
 
@@ -66,18 +68,45 @@ public class DictionaryController {
     @PostMapping("/type/save")
     @ResponseBody
     public Map<String, Object> saveDicType(DicType dicType) {
+
         try {
             dicTypeService.saveDicType(dicType);
             return HandleFlag.success();
-        } catch (AjaxRequestException e) {
+        } catch (TransactionRequiredException e) {
             e.printStackTrace();
             return HandleFlag.failObj("message", e.getMessage());
         }
     }
 
-    @RequestMapping("/type/toEdit")
-    public String toTypeEdit() {
+    @RequestMapping("/type/toEdit/{code}")
+    public String toTypeEdit(Model model, @PathVariable("code") String code) {
+        DicType dicType = dicTypeService.getDicTypeByCode(code);
+        model.addAttribute("dicType", dicType);
         return "/settings/dictionary/type/edit";
+    }
+
+    @RequestMapping("/type/update")
+    @ResponseBody
+    public Map<String, Object> updateDicType(DicType dicType) {
+        try {
+            dicTypeService.updateDicType(dicType);
+            return HandleFlag.success();
+        } catch (TransactionRequiredException e) {
+            e.printStackTrace();
+            return HandleFlag.failObj("message", e.getMessage());
+        }
+    }
+
+    @RequestMapping("/type/delete")
+    @ResponseBody
+    public Map<String, Object> deleteDicType(String[] code) {
+        try {
+            dicTypeService.deleteDicType(code);
+            return HandleFlag.success();
+        } catch (TransactionRequiredException e) {
+            e.printStackTrace();
+            return HandleFlag.failObj("message", e.getMessage());
+        }
     }
 
     @RequestMapping("/value/index")

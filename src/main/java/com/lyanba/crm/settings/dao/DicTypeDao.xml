@@ -22,4 +22,24 @@
     insert into tbl_dic_type
     values (#{code}, #{name}, #{description});
   </insert>
+
+  <update id="updateDicType">
+    update tbl_dic_type
+    <set>
+      <if test="name != null and name != ''">
+        name = #{name},
+      </if>
+      <if test="description != null and description != ''">
+        description = #{description},
+      </if>
+    </set>
+    where code = #{code}
+  </update>
+
+  <delete id="deleteDicType">
+    delete from tbl_dic_type where code in
+    <foreach collection="array" item="code" open="(" close=")" separator=",">
+      #{code}
+    </foreach>
+  </delete>
 </mapper>

@@ -3,6 +3,7 @@ package com.lyanba.crm.settings.service;
 import com.lyanba.crm.exception.AjaxRequestException;
 import com.lyanba.crm.settings.domain.DicType;
 
+import javax.transaction.TransactionRequiredException;
 import java.util.List;
 
 /**
@@ -17,5 +18,9 @@ public interface DicTypeService {
 
     DicType getDicTypeByCode(String code);
 
-    void saveDicType(DicType dicType) throws AjaxRequestException;
+    void saveDicType(DicType dicType) throws TransactionRequiredException;
+
+    void updateDicType(DicType dicType) throws TransactionRequiredException;
+
+    void deleteDicType(String[] code) throws TransactionRequiredException;
 }

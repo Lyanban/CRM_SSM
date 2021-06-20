@@ -18,4 +18,8 @@ public interface DicTypeDao {
     DicType getDicTypeByCode(@Param("code") String code);
 
     int saveDicType(DicType dicType);
+
+    int updateDicType(DicType dicType);
+
+    int deleteDicType(String[] code);
 }
