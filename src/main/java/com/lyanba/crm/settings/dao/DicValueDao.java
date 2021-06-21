@@ -13,4 +13,6 @@ import java.util.List;
  */
 public interface DicValueDao {
     List<DicValue> getDicValueList();
+
+    int saveDicValue(DicValue dicValue);
 }

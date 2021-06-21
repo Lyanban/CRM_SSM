@@ -12,4 +12,18 @@
     from tbl_dic_value
     order by typeCode, orderNo
   </select>
+
+  <insert id="saveDicValue">
+    insert into tbl_dic_value
+    (id,
+     text,
+     value,
+     orderNo,
+     typeCode)
+    values (#{id},
+            #{text},
+            #{value},
+            #{orderNo},
+            #{typeCode})
+  </insert>
 </mapper>

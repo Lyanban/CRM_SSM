@@ -65,6 +65,13 @@ public class DictionaryController {
         return null == dicType ? HandleFlag.successObj("message", "√") : HandleFlag.failObj("message", "该字典类型已存在！");
     }
 
+    @RequestMapping("/type/list")
+    @ResponseBody
+    public List<DicType> getDicTypeList() {
+        List<DicType> dicTypeList = dicTypeService.getDicTypeList();
+        return dicTypeList;
+    }
+
     @PostMapping("/type/save")
     @ResponseBody
     public Map<String, Object> saveDicType(DicType dicType) {
@@ -110,15 +117,32 @@ public class DictionaryController {
     }
 
     @RequestMapping("/value/index")
-    public String toValueIndex(Model model) {
-        List<DicValue> dicValueList = dicValueService.getDicValueList();
-        model.addAttribute("dicValueList", dicValueList);
+    public String toValueIndex() {
         return "/settings/dictionary/value/index";
+    }
+
+    @RequestMapping("/value/list")
+    @ResponseBody
+    public List<DicValue> getDicValueList() {
+        List<DicValue> dicValueList = dicValueService.getDicValueList();
+        return dicValueList;
     }
 
     @RequestMapping("/value/toSave")
     public String toValueSave() {
         return "/settings/dictionary/value/save";
+    }
+
+    @RequestMapping("/value/save")
+    @ResponseBody
+    public Map<String, Object> saveDicValue(DicValue dicValue) {
+        try {
+            dicValueService.saveDicValue(dicValue);
+            return HandleFlag.success();
+        } catch (TransactionRequiredException e) {
+            e.printStackTrace();
+            return HandleFlag.failObj("message", e.getMessage());
+        }
     }
 
     @RequestMapping("/value/toEdit")

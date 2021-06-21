@@ -36,13 +36,18 @@
           $("#deleteBtn").on("click", function () {
               let $checks = $("input[name=check]:checked");
               if ($checks.length !== 0) {
-                  if (confirm("确定删除选中的字典类型吗？")) {
-                      let param = "";
-                      $.each($checks, function (index, item) {
-                          param += "code=" + item.value + "&"
-                      });
-                      param = param.substr(0, param.length - 1);
-                      $.post(
+                  let param = "";
+                  let names = "";
+                  $.each($checks, function (index, item) {
+                      param += "code=" + item.value + "&"
+                      names += $("#n_" + item.value).text() + "、";
+                  });
+                  param = param.substr(0, param.length - 1);
+                  names = names.substr(0, names.length - 1);
+                  if (confirm("确定删除【" + names + "】字典类型吗？")) {
+                      alert("该功能尚未完善！谨慎操作！");
+                      window.location.reload();
+                      /*$.post(
                           "settings/dictionary/type/delete",
                           param,
                           function (resp) {
@@ -52,7 +57,7 @@
                                   alert("删除字典类型失败！");
                               }
                           }
-                      );
+                      );*/
                   }
               } else {
                   alert("请选择要删除的字典类型！");
@@ -92,7 +97,7 @@
       <td>序号</td>
       <td>编码</td>
       <td>名称</td>
-      <%--<td>描述</td>--%>
+      <td>描述</td>
     </tr>
     </thead>
     <tbody>
@@ -101,8 +106,8 @@
       <td><input type="checkbox" name="check" value="${dicType.code}"/></td>
       <td>${status.count}</td>
       <td>${dicType.code}</td>
-      <td>${dicType.name}</td>
-        <%--<td>${dicType.description}</td>--%>
+      <td id="n_${dicType.code}">${dicType.name}</td>
+      <td>${dicType.description}</td>
       </c:forEach>
     </tbody>
   </table>
