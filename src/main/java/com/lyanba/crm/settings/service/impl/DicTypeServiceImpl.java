@@ -1,10 +1,13 @@
 package com.lyanba.crm.settings.service.impl;
 
 import com.lyanba.crm.settings.dao.DicTypeDao;
+import com.lyanba.crm.settings.dao.DicValueDao;
 import com.lyanba.crm.settings.domain.DicType;
+import com.lyanba.crm.settings.domain.DicValue;
 import com.lyanba.crm.settings.service.DicTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.transaction.TransactionRequiredException;
 import java.util.List;
@@ -19,10 +22,16 @@ import java.util.List;
 @Service
 public class DicTypeServiceImpl implements DicTypeService {
     private DicTypeDao dicTypeDao;
+    private DicValueDao dicValueDao;
 
     @Autowired
     public void setDicTypeDao(DicTypeDao dicTypeDao) {
         this.dicTypeDao = dicTypeDao;
+    }
+
+    @Autowired
+    public void setDicValueDao(DicValueDao dicValueDao) {
+        this.dicValueDao = dicValueDao;
     }
 
     @Override
@@ -47,9 +56,19 @@ public class DicTypeServiceImpl implements DicTypeService {
             throw new TransactionRequiredException("更新数据字典类型失败！");
     }
 
+    @Transactional
     @Override
     public void deleteDicType(String[] code) throws TransactionRequiredException {
+        String[] typeCode = new String[code.length];
+        for (int i = 0; i < code.length; i++) {
+            Object[] objects = dicValueDao.getDicValueByTypeCode(code[i]).toArray();
+            DicValue v = (DicValue) objects[i];
+            typeCode[i] = v.getTypeCode();
+        }
+        if (dicValueDao.deleteDicValueByTypeCode(typeCode) != typeCode.length)
+            throw new TransactionRequiredException("删除数据字典类型失败！-1");
+
         if (dicTypeDao.deleteDicType(code) != code.length)
-            throw new TransactionRequiredException("删除数据字典类型失败！");
+            throw new TransactionRequiredException("删除数据字典类型失败！-2");
     }
 }

@@ -1,6 +1,5 @@
 package com.lyanba.crm.settings.web.controller;
 
-import com.lyanba.crm.exception.AjaxRequestException;
 import com.lyanba.crm.settings.domain.DicType;
 import com.lyanba.crm.settings.domain.DicValue;
 import com.lyanba.crm.settings.service.DicTypeService;
@@ -23,7 +22,6 @@ import java.util.Map;
  * @description:
  * @author: LyanbA
  * @createDate: 2021/6/20 11:28
- * @todo:
  */
 @Controller
 @RequestMapping("/settings/dictionary")
@@ -145,8 +143,41 @@ public class DictionaryController {
         }
     }
 
-    @RequestMapping("/value/toEdit")
-    public String toValueEdit() {
+    @RequestMapping("/value/toEdit/{value}")
+    public String toValueEdit(Model model, @PathVariable("value") String value) {
+        DicValue dicValue = dicValueService.getDicValueByValue(value);
+        model.addAttribute("dicValue", dicValue);
         return "/settings/dictionary/value/edit";
+    }
+
+    @RequestMapping("/value/getDicValueByValue")
+    @ResponseBody
+    public Map<String, Object> getDicValueByValue(String value) {
+        DicValue dicValue = dicValueService.getDicValueByValue(value);
+        return null == dicValue ? HandleFlag.successObj("message", "√") : HandleFlag.failObj("message", "该字典值已存在！");
+    }
+
+    @RequestMapping("/value/update")
+    @ResponseBody
+    public Map<String, Object> updateDicValue(DicValue dicValue) {
+        try {
+            dicValueService.updateDicValue(dicValue);
+            return HandleFlag.success();
+        } catch (TransactionRequiredException e) {
+            e.printStackTrace();
+            return HandleFlag.failObj("message", e.getMessage());
+        }
+    }
+
+    @RequestMapping("/value/delete")
+    @ResponseBody
+    public Map<String, Object> deleteDicValue(String[] value) {
+        try {
+            dicValueService.deleteDicValue(value);
+            return HandleFlag.success();
+        } catch (TransactionRequiredException e) {
+            e.printStackTrace();
+            return HandleFlag.failObj("message", e.getMessage());
+        }
     }
 }

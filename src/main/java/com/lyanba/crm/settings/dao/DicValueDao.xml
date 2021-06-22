@@ -26,4 +26,56 @@
             #{orderNo},
             #{typeCode})
   </insert>
+
+  <select id="getDicValueByValue" resultType="com.lyanba.crm.settings.domain.DicValue">
+    select id,
+           value,
+           text,
+           orderNo,
+           typeCode
+    from tbl_dic_value
+    where value = #{value}
+  </select>
+
+  <update id="updateDicValue">
+    update tbl_dic_value
+    <set>
+      <if test="value != null and value != ''">
+        value = #{value},
+      </if>
+      <if test="text != null and text != ''">
+        text = #{text},
+      </if>
+      <if test="orderNo != null and orderNo != ''">
+        orderNo = #{orderNo},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteDicValue">
+    delete from tbl_dic_value
+    where value in
+    <foreach collection="array" item="value" open="(" close=")" separator=",">
+      #{value}
+    </foreach>
+  </delete>
+
+  <select id="getDicValueByTypeCode" resultType="com.lyanba.crm.settings.domain.DicValue">
+    select id,
+           value,
+           text,
+           orderNo,
+           typeCode
+    from tbl_dic_value
+    where typeCode = #{typeCode}
+  </select>
+
+  <delete id="deleteDicValueByTypeCode">
+    delete from tbl_dic_value
+    where typeCode in
+    <foreach collection="array" item="typeCode" open="(" close=")" separator=",">
+      #{typeCode}
+    </foreach>
+  </delete>
 </mapper>

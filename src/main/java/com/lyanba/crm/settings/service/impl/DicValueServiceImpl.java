@@ -37,4 +37,21 @@ public class DicValueServiceImpl implements DicValueService {
         if (dicValueDao.saveDicValue(dicValue) != 1)
             throw new TransactionRequiredException("新增字典值失败！");
     }
+
+    @Override
+    public DicValue getDicValueByValue(String value) {
+        return dicValueDao.getDicValueByValue(value);
+    }
+
+    @Override
+    public void updateDicValue(DicValue dicValue) throws TransactionRequiredException {
+        if (1 != dicValueDao.updateDicValue(dicValue))
+            throw new TransactionRequiredException("更新字典值失败!");
+    }
+
+    @Override
+    public void deleteDicValue(String[] value) throws TransactionRequiredException {
+        if (dicValueDao.deleteDicValue(value) != value.length)
+            throw new TransactionRequiredException("删除字典值失败!");
+    }
 }

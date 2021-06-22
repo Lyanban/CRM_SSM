@@ -1,5 +1,6 @@
 package com.lyanba.crm.workbench.web.controller;
 
+import com.lyanba.crm.utils.HandleFlag;
 import com.lyanba.crm.workbench.domain.Activity;
 import com.lyanba.crm.workbench.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @className: ActivityController
@@ -28,10 +31,19 @@ public class ActivityController {
     }
 
     @RequestMapping("/index")
-    public String toIndex(Model model) {
-        List<Activity> activityList = activityService.getActivityList();
-        model.addAttribute("activityList", activityList);
+    public String toIndex() {
         return "/workbench/activity/index";
+    }
+
+    @RequestMapping("/list")
+    @ResponseBody
+    public Map<String, Object> getActivityList() {
+        List<Activity> activityList = activityService.getActivityList();
+        if (null != activityList && activityList.size() > 0) {
+            return HandleFlag.successObj("activityList", activityList);
+        } else {
+            return HandleFlag.failObj("message", "目前没有市场活动！");
+        }
     }
 
     @RequestMapping("/detail/{id}")

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
+  String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
 %>
 <html>
 <head>
@@ -22,6 +22,30 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
   <script type="text/javascript">
 
       $(function () {
+          $.get(
+              "workbench/activity/list",
+              function (resp) {
+                  if (10000 === resp.success) {
+                      let html = "";
+                      $.each(resp.activityList, function (index, item) {
+                          if (index % 2 === 0) {
+                              html += '<tr class="active">';
+                          } else {
+                              html += '<tr class="">';
+                          }
+                          html += '<td><input type="checkbox" name="check" value=""/></td>';
+                          html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail/' + item.id + '\'">' + item.name + '</a></td>';
+                          html += '<td>' + item.owner + '</td>';
+                          html += '<td>' + item.startDate + '</td>';
+                          html += '<td>' + item.endDate + '</td>';
+                          html += '</tr>';
+                      });
+                      $("#tbody").html(html);
+                  } else {
+                      $("#tbody").html(resp.message);
+                  }
+              }
+          );
       });
 
   </script>
@@ -208,10 +232,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 </div>
 <div style="position: relative; top: -20px; left: 0px; width: 100%; height: 100%;">
   <div style="width: 100%; position: absolute;top: 5px; left: 10px;">
-
     <div class="btn-toolbar" role="toolbar" style="height: 80px;">
       <form class="form-inline" role="form" style="position: relative;top: 8%; left: 5px;">
-
         <div class="form-group">
           <div class="input-group">
             <div class="input-group-addon">名称</div>
@@ -226,13 +248,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
           </div>
         </div>
 
-
         <div class="form-group">
           <div class="input-group">
             <div class="input-group-addon">开始日期</div>
             <input class="form-control" type="text" id="startTime"/>
           </div>
         </div>
+
         <div class="form-group">
           <div class="input-group">
             <div class="input-group-addon">结束日期</div>
@@ -241,9 +263,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         </div>
 
         <button type="submit" class="btn btn-default">查询</button>
-
       </form>
     </div>
+
     <div class="btn-toolbar" role="toolbar"
          style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
       <div class="btn-group" style="position: relative; top: 18%;">
@@ -279,20 +301,21 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
           <td>结束日期</td>
         </tr>
         </thead>
-        <tbody>
-        <c:forEach items="${activityList}" var="activity" varStatus="status">
+        <tbody id="tbody">
+        <%--<c:forEach items="${activityList}" var="activity" varStatus="status">
           <tr class="${status.count % 2 == 0 ? "" : "active"}">
             <td>
               <input type="checkbox"/>
             </td>
             <td>
-              <a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail/${activity.id}';">${activity.name}</a>
+              <a style="text-decoration: none; cursor: pointer;"
+                 onclick="window.location.href='workbench/activity/detail/${activity.id}';">${activity.name}</a>
             </td>
             <td>${activity.owner}</td>
             <td>${activity.startDate}</td>
             <td>${activity.endDate}</td>
           </tr>
-        </c:forEach>
+        </c:forEach>--%>
         <%--<tr class="active">
           <td><input type="checkbox"/></td>
           <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail';">发传单</a>
@@ -331,6 +354,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         </div>
         <button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
       </div>
+
       <div style="position: relative;top: -88px; left: 285px;">
         <nav>
           <ul class="pagination">

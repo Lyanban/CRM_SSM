@@ -16,4 +16,10 @@ public interface DicValueService {
     List<DicValue> getDicValueList();
 
     void saveDicValue(DicValue dicValue) throws TransactionRequiredException;
+
+    DicValue getDicValueByValue(String value);
+
+    void updateDicValue(DicValue dicValue) throws TransactionRequiredException;
+
+    void deleteDicValue(String[] value) throws TransactionRequiredException;
 }

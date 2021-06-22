@@ -218,6 +218,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
               class="glyphicon glyphicon-leaf"></span> 产品</a></li>
       <li class="liClass"><a href="javascript:void(0);" target="workareaFrame"><span
               class="glyphicon glyphicon-usd"></span> 报价</a></li>
+      <li class="liClass"><a href="settings/dictionary/index" target="_self"><span
+              class="glyphicon glyphicon-home"></span> 数据字典表</a></li>
     </ul>
 
     <!-- 分割线 -->

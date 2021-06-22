@@ -45,9 +45,9 @@
                   param = param.substr(0, param.length - 1);
                   names = names.substr(0, names.length - 1);
                   if (confirm("确定删除【" + names + "】字典类型吗？")) {
-                      alert("该功能尚未完善！谨慎操作！");
-                      window.location.reload();
-                      /*$.post(
+                      /*alert("该功能尚未完善！谨慎操作！");
+                      window.location.reload();*/
+                      $.post(
                           "settings/dictionary/type/delete",
                           param,
                           function (resp) {
@@ -57,7 +57,7 @@
                                   alert("删除字典类型失败！");
                               }
                           }
-                      );*/
+                      );
                   }
               } else {
                   alert("请选择要删除的字典类型！");

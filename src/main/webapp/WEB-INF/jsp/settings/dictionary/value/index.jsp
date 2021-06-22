@@ -22,6 +22,48 @@
           $("#tbody").on("change", $("input[name=check]"), function () {
               $("#checkAll").prop("checked", $("input[name=check]").length === $("input[name=check]:checked").length);
           });
+
+          $("#editBtn").on("click", function () {
+              let n = $("input[name=check]:checked").length;
+              if (1 === n) {
+                  location.href = "settings/dictionary/value/toEdit/" + $("input[name=check]:checked").val();
+              } else if (0 === n) {
+                  alert("请选择要修改的字典值！");
+              } else {
+                  alert("仅能选择一条字典值！");
+              }
+          });
+
+          $("#deleteBtn").on("click", function () {
+              let $checks = $("input[name=check]:checked");
+              if (0 !== $checks.length) {
+                  let param = "";
+                  let texts = "";
+                  $.each($checks, function (index, item) {
+                      param += "value=" + item.value + "&"
+                      texts += $("#t_" + item.value).text() + "、";
+                  });
+                  param = param.substr(0, param.length - 1);
+                  texts = texts.substr(0, texts.length - 1);
+                  if (confirm("确定删除【" + texts + "】字典类型吗？")) {
+                      /*alert("该功能尚未完善！谨慎操作！");
+                      window.location.reload();*/
+                      $.post(
+                          "settings/dictionary/value/delete",
+                          param,
+                          function (resp) {
+                              if (10000 === resp.success) {
+                                  window.location.reload();
+                              } else {
+                                  alert("删除字典值失败！");
+                              }
+                          }
+                      );
+                  }
+              } else {
+                  alert("请选择要删除的字典值！");
+              }
+          });
       });
 
       function getDicValueList() {
@@ -35,10 +77,11 @@
                       } else {
                           html += '<tr class="">';
                       }
-                      html += '<td><input type="checkbox" name="check"/></td>';
+                      // html += '<input id="i_' + item.value + '" type="hidden" value="' + item.id + '">';
+                      html += '<td><input type="checkbox" name="check" value="' + item.value + '"/></td>';
                       html += '<td>' + (index + 1) + '</td>';
                       html += '<td>' + item.value + '</td>';
-                      html += '<td>' + item.text + '</td>';
+                      html += '<td id="t_' + item.value + '">' + item.text + '</td>';
                       html += '<td>' + item.orderNo + '</td>';
                       html += '<td>' + item.typeCode + '</td>';
                       html += '</tr>';
@@ -63,10 +106,11 @@
     <button type="button" class="btn btn-primary" onclick="window.location.href='settings/dictionary/value/toSave'">
       <span class="glyphicon glyphicon-plus"></span> 创建
     </button>
-    <button type="button" class="btn btn-default" onclick="window.location.href='settings/dictionary/value/toEdit'">
+    <button id="editBtn" type="button" class="btn btn-default">
+      <%--<button id="editBtn" type="button" class="btn btn-default" onclick="window.location.href='settings/dictionary/value/toEdit'">--%>
       <span class="glyphicon glyphicon-edit"></span> 编辑
     </button>
-    <button type="button" class="btn btn-danger">
+    <button id="deleteBtn" type="button" class="btn btn-danger">
       <span class="glyphicon glyphicon-minus"></span> 删除
     </button>
   </div>
