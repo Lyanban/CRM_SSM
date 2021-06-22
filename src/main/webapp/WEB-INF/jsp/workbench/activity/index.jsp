@@ -22,6 +22,15 @@
   <script type="text/javascript">
 
       $(function () {
+          $(".time").datetimepicker({
+              minView: "month",
+              language:  'zh-CN',
+              format: 'yyyy-mm-dd',
+              autoclose: true,
+              todayBtn: true,
+              pickerPosition: "bottom-left"
+          });
+
           $.get(
               "workbench/activity/list",
               function (resp) {
@@ -34,7 +43,8 @@
                               html += '<tr class="">';
                           }
                           html += '<td><input type="checkbox" name="check" value=""/></td>';
-                          html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail/' + item.id + '\'">' + item.name + '</a></td>';
+                          html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail/' + item.id + '\'">'
+                              + item.name + '</a></td>';
                           html += '<td>' + item.owner + '</td>';
                           html += '<td>' + item.startDate + '</td>';
                           html += '<td>' + item.endDate + '</td>';
@@ -46,6 +56,14 @@
                   }
               }
           );
+
+          $("#checkAll").on("change", function () {
+              $("input[name=check]").prop("checked", this.checked);
+          });
+
+          $("#tbody").on("change", $("input[name=check]"), function () {
+              $("#checkAll").prop("checked", $("input[name=check]").length === $("input[name=check]:checked").length);
+          });
       });
 
   </script>
@@ -251,18 +269,18 @@
         <div class="form-group">
           <div class="input-group">
             <div class="input-group-addon">开始日期</div>
-            <input class="form-control" type="text" id="startTime"/>
+            <input class="form-control time" type="text" id="startTime" placeholder="选择日期" readonly>
           </div>
         </div>
 
         <div class="form-group">
           <div class="input-group">
             <div class="input-group-addon">结束日期</div>
-            <input class="form-control" type="text" id="endTime">
+            <input class="form-control time" type="text" id="endTime" placeholder="选择日期" readonly>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-default">查询</button>
+        <button type="reset" class="btn btn-default">查询</button>
       </form>
     </div>
 
@@ -294,7 +312,7 @@
       <table class="table table-hover">
         <thead>
         <tr style="color: #B3B3B3;">
-          <td><input type="checkbox"/></td>
+          <td><input id="checkAll" type="checkbox"/></td>
           <td>名称</td>
           <td>所有者</td>
           <td>开始日期</td>

@@ -18,6 +18,7 @@
     from tbl_activity a
            join tbl_user u
                 on a.owner = u.id
+    order by a.startDate asc
   </select>
 
   <select id="getActivityById" resultType="com.lyanba.crm.workbench.domain.Activity">
