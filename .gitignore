@@ -1,4 +1,4 @@
 .idea/
 target/
-src/main/webapp/dataDir/
+dataDir/
 *.iml
