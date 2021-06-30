@@ -5,23 +5,177 @@
 <mapper namespace="com.lyanba.crm.workbench.dao.ActivityDao">
   <select id="getActivityList" resultType="com.lyanba.crm.workbench.domain.Activity">
     select a.id,
-           u.name as owner,
-           a.name,
-           a.startDate,
-           a.endDate,
-           a.cost,
-           a.description,
-           a.createTime,
-           a.createBy,
-           a.editBy,
-           a.editTime
+    u.name as owner,
+    a.name,
+    a.startDate,
+    a.endDate,
+    a.cost,
+    a.description,
+    a.createTime,
+    a.createBy,
+    a.editTime,
+    a.editBy
     from tbl_activity a
-           join tbl_user u
-                on a.owner = u.id
-    order by a.startDate asc
+    join tbl_user u
+    on a.owner = u.id
+    <where>
+      isDelete = 0
+      <if test="name != null and name != ''">
+        and a.name like '%' #{name} '%'
+      </if>
+      <if test="owner != null and owner != ''">
+        and u.name like '%' #{owner} '%'
+      </if>
+      <if test="startDate != null and startDate != ''">
+        and a.startDate &gt; #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and a.endDate &lt; #{endDate}
+      </if>
+    </where>
+    order by a.createTime desc
+    limit #{skipCount}, #{pageSize}
+  </select>
+
+  <select id="getActivityCount" resultType="int">
+    select count(*)
+    from tbl_activity a
+    join tbl_user u
+    on a.owner=u.id
+    <where>
+      <if test="name != null and name != ''">
+        a.name like '%' #{name} '%'
+      </if>
+      <if test="owner != null and owner != ''">
+        and u.name like '%' #{owner} '%'
+      </if>
+      <if test="startDate != null and startDate != ''">
+        and a.startDate &gt; #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and a.endDate &lt; #{endDate}
+      </if>
+    </where>
   </select>
 
   <select id="getActivityById" resultType="com.lyanba.crm.workbench.domain.Activity">
+    select id,
+           owner,
+           name,
+           startDate,
+           endDate,
+           cost,
+           description,
+           createTime,
+           createBy,
+           editTime,
+           editBy
+    from tbl_activity
+    where id = #{id}
+  </select>
+
+  <insert id="saveActivity">
+    insert into tbl_activity (id,
+                              owner,
+                              name,
+                              startDate,
+                              endDate,
+                              cost,
+                              description,
+                              createTime,
+                              createBy,
+                              isDelete)
+    values (#{id},
+            #{owner},
+            #{name},
+            #{startDate},
+            #{endDate},
+            #{cost},
+            #{description},
+            #{createTime},
+            #{createBy},
+            0)
+  </insert>
+
+  <update id="updateActivity">
+    update tbl_activity
+    <set>
+      <if test="owner != null and owner != ''">
+        owner = #{owner},
+      </if>
+      <if test="name != null and name != ''">
+        name = #{name},
+      </if>
+      <if test="startDate != null and startDate != ''">
+        startDate = #{startDate},
+      </if>
+      <if test="endDate != null and endDate != ''">
+        endDate = #{endDate},
+      </if>
+      <if test="cost != null and cost != ''">
+        cost = #{cost},
+      </if>
+      <if test="description != null and description != ''">
+        description = #{description},
+      </if>
+      <if test="editBy != null and editBy != ''">
+        editBy = #{editBy},
+      </if>
+      <if test="editTime != null and editTime != ''">
+        editTime = #{editTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <update id="deleteActivity">
+    update tbl_activity
+    <set>
+      isDelete = 1,
+      <if test="editBy != null and editBy != ''">
+        editBy = #{editBy},
+      </if>
+      <if test="editTime != null and editTime != ''">
+        editTime = #{editTime},
+      </if>
+    </set>
+    where id in
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </update>
+
+  <insert id="saveActivityList">
+    insert into tbl_activity (
+    id,
+    owner,
+    name,
+    startDate,
+    endDate,
+    cost,
+    description,
+    createTime,
+    createBy,
+    isDelete
+    )
+    values
+    <foreach collection="activityList" item="activity" separator=",">
+      (
+      #{activity.id},
+      #{activity.owner},
+      #{activity.name},
+      #{activity.startDate},
+      #{activity.endDate},
+      #{activity.cost},
+      #{activity.description},
+      #{activity.createTime},
+      #{activity.createBy},
+      #{activity.isDelete}
+      )
+    </foreach>
+  </insert>
+
+  <select id="getAllActivity" resultType="Activity">
     select a.id,
            u.name as owner,
            a.name,
@@ -32,10 +186,32 @@
            a.createTime,
            a.createBy,
            a.editTime,
-           a.editBy
+           a.editBy,
+           a.isDelete
     from tbl_activity a
            join tbl_user u
                 on a.owner = u.id
-    where a.id = #{id}
+  </select>
+
+  <select id="getActivityByIds" resultType="Activity">
+    select a.id,
+           u.name as owner,
+           a.name,
+           a.startDate,
+           a.endDate,
+           a.cost,
+           a.description,
+           a.createTime,
+           a.createBy,
+           a.editTime,
+           a.editBy,
+           a.isDelete
+    from tbl_activity a
+           join tbl_user u
+                on a.owner = u.id
+    where a.id in
+    <foreach collection="activityId" separator="," item="id" open="(" close=")">
+      #{id}
+    </foreach>
   </select>
 </mapper>

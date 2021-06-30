@@ -1,12 +1,14 @@
 package com.lyanba.crm.workbench.domain;
 
+import java.io.Serializable;
+
 /**
  * @className: Activity
  * @description:
  * @author: LyanbA
  * @createDate: 2021/6/20 15:35
  */
-public class Activity {
+public class Activity implements Serializable {
     private String id;
     private String owner;
     private String name;
@@ -18,6 +20,7 @@ public class Activity {
     private String createBy;
     private String editTime;
     private String editBy;
+    private String isDelete;
 
     public String getId() {
         return id;
@@ -105,5 +108,13 @@ public class Activity {
 
     public void setEditBy(String editBy) {
         this.editBy = editBy;
+    }
+
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete;
     }
 }

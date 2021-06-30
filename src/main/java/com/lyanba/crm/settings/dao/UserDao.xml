@@ -21,4 +21,39 @@
     where loginAct = #{loginAct}
       and loginPwd = #{loginPwd}
   </select>
+
+  <select id="getUserById" resultType="com.lyanba.crm.settings.domain.User">
+    select id,
+           loginAct,
+           name,
+           loginPwd,
+           email,
+           expireTime,
+           lockState,
+           deptno,
+           allowIps,
+           createTime,
+           createBy,
+           editTime,
+           editBy
+    from tbl_user
+    where id = #{id}
+  </select>
+
+  <select id="getUserList" resultType="com.lyanba.crm.settings.domain.User">
+    select id,
+           loginAct,
+           name,
+           loginPwd,
+           email,
+           expireTime,
+           lockState,
+           deptno,
+           allowIps,
+           createTime,
+           createBy,
+           editTime,
+           editBy
+    from tbl_user
+  </select>
 </mapper>

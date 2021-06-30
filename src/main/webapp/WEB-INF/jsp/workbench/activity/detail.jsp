@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
+  String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
 %>
 <html>
 <head>
@@ -13,7 +13,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
   <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 
   <script type="text/javascript">
-
       //默认情况下取消和保存按钮是隐藏的
       var cancelAndSaveBtnDefault = true;
 
@@ -51,8 +50,41 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
           $(".myHref").mouseout(function () {
               $(this).children("span").css("color", "#E6E6E6");
           });
+
+          getActivityRemarkList();
       });
 
+      function getActivityRemarkList() {
+          $.get(
+              "workbench/activity/remark/list/${activity.id}",
+              function (resp) {
+                  if (10000 === resp.success) {
+                      let html = "";
+                      $.each(resp.activityRemarkList, function (index, activityRemark) {
+                          html += '<div class="remarkDiv" style="height: 60px;">';
+                          html += '<img title="' + activityRemark.createBy + '" src="image/user-thumbnail.png" style="width: 30px; height:30px;">';
+                          html += '<div style="position: relative; top: -40px; left: 40px;" >';
+                          html += '<h5 id="n_' + activityRemark.id + '">' + activityRemark.noteContent + '</h5>';
+                          html += '<font color="gray">市场活动</font> <font color="gray">-</font> <b>${activity.name}</b> <small style="color: gray;"> ' + (activityRemark.editFlag === "0" ? activityRemark.createTime : activityRemark.editTime) + ' 由 ' + (activityRemark.editFlag === "0" ? activityRemark.createBy : activityRemark.editBy) + '</small>';
+                          html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
+                          html += '<a class="myHref" onclick="openEditRemarkModal(\'' + activityRemark.id + '\')" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>';
+                          html += '&nbsp;&nbsp;&nbsp;&nbsp;';
+                          html += '<a class="myHref" onclick="deleteRemarkById(\'' + activityRemark.id + '\')" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>';
+                          html += '</div>';
+                          html += '</div>';
+                          html += '</div>';
+                      });
+                      $("#activityRemarkDiv").html(html);
+                  } else {
+                      alert(resp.message);
+                  }
+              }
+          );
+      }
+
+      function openEditRemarkModal(activityRemarkId) {}
+
+      function deleteRemarkById(activityRemarkId) {}
   </script>
 
 </head>
@@ -73,7 +105,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
       <div class="modal-body">
         <form class="form-horizontal" role="form">
           <div class="form-group">
-            <label for="edit-describe" class="col-sm-2 control-label">内容</label>
+            <label for="noteContent" class="col-sm-2 control-label">内容</label>
             <div class="col-sm-10" style="width: 81%;">
               <textarea class="form-control" rows="3" id="noteContent"></textarea>
             </div>
@@ -148,7 +180,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
     <div style="width: 630px;position: relative; left: 200px; top: -20px;">
       <b>
         <%--市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等--%>
-          ${activity.description}
+        ${activity.description}
       </b>
     </div>
     <div style="height: 1px; width: 850px; background: #D5D5D5; position: relative; top: -20px;"></div>
@@ -160,9 +192,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
   <div class="page-header">
     <h4>备注</h4>
   </div>
-
+  <div id="activityRemarkDiv"></div>
   <!-- 备注1 -->
-  <div class="remarkDiv" style="height: 60px;">
+  <%--<div class="remarkDiv" style="height: 60px;">
     <img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
     <div style="position: relative; top: -40px; left: 40px;">
       <h5>哎呦！</h5>
@@ -176,10 +208,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                                                            style="font-size: 20px; color: #E6E6E6;"></span></a>
       </div>
     </div>
-  </div>
+  </div>--%>
 
   <!-- 备注2 -->
-  <div class="remarkDiv" style="height: 60px;">
+  <%--<div class="remarkDiv" style="height: 60px;">
     <img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
     <div style="position: relative; top: -40px; left: 40px;">
       <h5>呵呵！</h5>
@@ -193,8 +225,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                                                            style="font-size: 20px; color: #E6E6E6;"></span></a>
       </div>
     </div>
-  </div>
-
+  </div>--%>
   <div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">
     <form role="form" style="position: relative;top: 10px; left: 10px;">
       <textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"

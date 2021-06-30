@@ -8,6 +8,8 @@ import com.lyanba.crm.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @className: UserServiceImpl
  * @description:
@@ -43,5 +45,15 @@ public class UserServiceImpl implements UserService {
             throw new LoginException("IP地址受限");
         }
         return user;
+    }
+
+    @Override
+    public List<User> getUserList() {
+        return userDao.getUserList();
+    }
+
+    @Override
+    public User getUserById(String id) {
+        return userDao.getUserById(id);
     }
 }

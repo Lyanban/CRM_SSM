@@ -3,6 +3,7 @@ package com.lyanba.crm.settings.web.controller;
 import com.lyanba.crm.exception.LoginException;
 import com.lyanba.crm.settings.domain.User;
 import com.lyanba.crm.settings.service.UserService;
+import com.lyanba.crm.utils.HandleFlag;
 import com.lyanba.crm.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -126,5 +128,16 @@ public class UserController {
 
         //重定向到登录页面
         return "redirect:/settings/user/toLogin.do";
+    }
+
+    @RequestMapping("/list")
+    @ResponseBody
+    public Map<String, Object> userList() {
+        List<User> userList = userService.getUserList();
+        if (null != userList && userList.size() > 0) {
+            return HandleFlag.successObj("userList", userList);
+        } else {
+            return HandleFlag.failObj("message", "Error");
+        }
     }
 }
