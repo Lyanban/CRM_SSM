@@ -1,4 +1,5 @@
 .idea/
 target/
 dataDir/
+.DS_Store
 *.iml
